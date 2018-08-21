@@ -2,9 +2,9 @@ library(INLA)
 library(INLABMA)
 
 # Load helper functions
-source("../src/Data_Generation.R")
-source("../src/INLAMH_Utils.R")
-source("../src/Post_Processing.R")
+source("../R/Data_Generation.R")
+source("../R/INLAMH_Utils.R")
+source("../R/Post_Processing.R")
 
 # Simulate data
 loc <- sim_locations(n=1000, lim=c(0,1), seed=70)

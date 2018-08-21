@@ -2,9 +2,9 @@ library(INLA)
 library(INLABMA)
 
 # Load helper functions
-source("../src/Data_Generation.R")
-source("../src/INLAMH_Utils.R")
-source("../src/Post_Processing.R")
+source("../R/Data_Generation.R")
+source("../R/INLAMH_Utils.R")
+source("../R/Post_Processing.R")
 
 # Simulate data
 dat <- sim_binomial_regression(n=1000, p=10, num_zero=3, n_trial=1, seed=72)

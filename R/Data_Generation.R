@@ -22,6 +22,7 @@ sim_locations <- function(n=100, lim=c(0, 1), seed=72){
 # covariate.rho: Spatial range of GP for simulated spatial covariates
 # sre.sigma: Margincal variance of GP for simulated spatial random effects
 # sre.rho: Spatial range of GP for simulated spatial random effects
+# cor_matrix: Matrix that describes the correlation between covariates
 # seed: Random seed to be set before generating data
 
 # Simulation for normal linear regression data
@@ -60,7 +61,8 @@ sim_binomial_regression <- function(n=100, p=10, num_zero=3, n_trial=1,
 # spatial random effects
 sim_linear_regression_spatial <- function(loc, p=10, num_zero=3, sd=3,
                                           covariate.sigma=1, covariate.rho=1,
-                                          sre.sigma=1, sre.rho=1, seed=72){
+                                          sre.sigma=1, sre.rho=1, 
+                                          cor_matrix=diag(p), seed=72){
     set.seed(seed)
     n <- nrow(loc)
     # Generate covariates from a GP w/ Matern covariance 
@@ -73,6 +75,8 @@ sim_linear_regression_spatial <- function(loc, p=10, num_zero=3, sd=3,
                                    alpha=sqrt(8)/covariate.rho)
         X[, i] <- c(rmvnorm(1, sigma=temp_cov))
     }
+    # Use cor_matrix to make covariates correlated
+    X <- t(chol(cor_matrix) %*% t(X))
     X <- cbind(rep(1, n), X)
     # Regression coefficients are standard t w/ df=1, i.e. Cauchy
     beta <- rt(p+1, df=1)
@@ -98,7 +102,9 @@ sim_linear_regression_spatial <- function(loc, p=10, num_zero=3, sd=3,
 # spatial random effects
 sim_binomial_regression_spatial <- function(loc, p=10, num_zero=3, n_trial=1, 
                                             covariate.sigma=1, covariate.rho=1,
-                                            sre.sigma=1, sre.rho=1, seed=72){
+                                            sre.sigma=1, sre.rho=1, 
+                                            cor_matrix=diag(p), 
+                                            seed=72){
     set.seed(seed)
     n <- nrow(loc)
     # Generate covariates from a GP w/ Matern covariance 
@@ -111,6 +117,8 @@ sim_binomial_regression_spatial <- function(loc, p=10, num_zero=3, n_trial=1,
                                    alpha=sqrt(8)/covariate.rho)
         X[, i] <- c(rmvnorm(1, sigma=temp_cov))
     }
+    # Use cor_matrix to make covariates correlated
+    X <- t(chol(cor_matrix) %*% t(X))
     X <- cbind(rep(1, n), X)
     # Regression coefficients are standard t w/ df=1, i.e. Cauchy
     beta <- rt(p+1, df=1)
